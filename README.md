@@ -1,67 +1,50 @@
-# Monorepo with Turborepo
+# Micro Frontend Monorepo Boilerplate
 
-This is a monorepo example using Turborepo, React, Vite, and Tailwind CSS v3.
+A scalable **Monorepo Micro Frontend boilerplate** built with **React, Vite, and Module Federation**.
+This repository demonstrates how to structure, develop, and deploy multiple independent frontend applications
+while sharing common dependencies and UI components.
 
-## What's inside?
+## ✨ Key Features
+- 🧩 **Micro Frontend Architecture** using Module Federation
+- 🗂️ **Monorepo setup** for managing multiple apps and shared packages
+- ⚡ **Vite + SWC** for fast development and builds
+- 🔄 **Shared dependencies** (React, i18n, state, utilities)
+- 🎨 **Shared UI Component Library**
+- 🌍 **Internationalization ready** (react-i18next)
+- 🧪 **Testing-ready** setup (Jest + RTL)
+- 🚀 Optimized for **scalability and team collaboration**
 
-This monorepo uses [Turborepo](https://turbo.build/) and contains:
+## 🏗️ Architecture Overview
+- **Host App** – Main container that loads remote applications
+- **Remote Apps** – Independently developed & deployed MFEs
+- **Shared Packages** – UI components, hooks, utils, and configs
 
-### Apps and Packages
+## 📦 Tech Stack
+- React
+- Vite + SWC
+- Module Federation
+- TypeScript
+- Tailwind CSS / SCSS
+- Jest & React Testing Library
 
-- `apps/web`: A web application using React + Vite (runs on port 3000)
-- `apps/mobile`: A mobile application using React + Vite (runs on port 3001)
-- `shared/ui`: A shared UI component library with Tailwind CSS
+## 🎯 Use Cases
+- Large-scale frontend applications
+- Multi-team frontend development
+- Gradual migration from monolith to micro frontend
+- Enterprise-grade UI platforms
 
-### Utilities
+## 📁 Project Structure
+apps/
+- host
+- remote-search
+- remote-results
 
-This Turborepo has some additional tools:
+packages/
+- ui-components
+- shared-utils
+- config
 
-- **TypeScript** for static type checking
-- **ESLint** for code linting
-- **Prettier** for code formatting
-
-## Quick Start
-
-To install dependencies and run all apps:
-
+## 🚀 Getting Started
 ```bash
-# Install dependencies
-pnpm install
-
-# Run all apps in development mode
-pnpm dev
-```
-
-The apps will be available at:
-- Web App: http://localhost:3000
-- Mobile App: http://localhost:3001
-
-## Commands
-
-- `pnpm dev` - Start all apps in development mode
-- `pnpm build` - Build all apps and packages
-- `pnpm lint` - Lint all packages
-- `pnpm clean` - Clean all build outputs
-
-## Development
-
-### Adding a new app
-
-1. Create a new folder in `apps/`
-2. Initialize it with Vite React + TypeScript
-3. Update the new app's `package.json` to include `@monorepo/ui` dependency
-
-### Adding a new shared component
-
-1. Add your component to `shared/ui/src/components/`
-2. Export it from `shared/ui/src/index.ts`
-3. Use it in any app by importing from `@monorepo/ui`
-
-## Micro Frontend Ready
-
-This monorepo is set up for micro frontend architecture with:
-
-- Independent deployment capability for each app
-- Shared component library for consistency
-- Separate build outputs for each application
-- Scalable structure for adding more applications
+npm install
+npm run dev
