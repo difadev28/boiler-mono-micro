@@ -1,0 +1,28 @@
+{
+  "root": true,
+  "extends": [
+    "../../.eslintrc.json",
+    "plugin:storybook/recommended"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "ignorePatterns": [
+    "dist",
+    "node_modules",
+    "storybook-static",
+    "postcss.config.js",
+    "tailwind.config.js",
+    "vite.config.ts",
+    "*.mdx"
+  ],
+  "overrides": [
+    {
+      "files": ["*.stories.@(js|jsx|ts|tsx)"],
+      "rules": {
+        "import/no-extraneous-dependencies": "off",
+        "storybook/no-renderer-packages": "off"
+      }
+    }
+  ]
+}
