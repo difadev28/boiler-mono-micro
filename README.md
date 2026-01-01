@@ -48,7 +48,7 @@ The host application follows a strict dependency rule where inner layers know no
 ```mermaid
 graph TD
     subgraph Infrastructure [Infrastructure Layer]
-        API[ApiClient (Axios)]
+        API["ApiClient (Axios)"]
         RepoImpl[RealAuthRepository]
     end
 
