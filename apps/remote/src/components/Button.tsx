@@ -1,19 +1,19 @@
 import React from 'react';
 
-export interface ButtonProps {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label: string;
-    onClick?: () => void;
     variant?: 'primary' | 'secondary' | 'outline';
     size?: 'sm' | 'md' | 'lg';
-    disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
     label,
-    onClick,
     variant = 'primary',
     size = 'md',
-    disabled = false
+    className = '',
+    disabled = false,
+    type = 'button',
+    ...props
 }) => {
     const baseStyles = 'font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
 
@@ -31,14 +31,14 @@ const Button: React.FC<ButtonProps> = ({
 
     const disabledStyles = 'opacity-50 cursor-not-allowed';
 
-    const className = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${disabled ? disabledStyles : ''}`;
+    const combinedClassName = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${disabled ? disabledStyles : ''} ${className}`;
 
     return (
         <button
-            onClick={onClick}
+            type={type}
             disabled={disabled}
-            className={className}
-            type="button"
+            className={combinedClassName}
+            {...props}
         >
             {label}
         </button>

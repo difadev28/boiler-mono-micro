@@ -9,8 +9,18 @@ export default defineConfig({
     federation({
       name: 'remote_app',
       filename: 'remoteEntry.js',
-      // Expose components to be consumed by host
+      // Expose Atomic Design components
       exposes: {
+        // Atoms
+        './atoms/Input': './src/components/atoms/Input.tsx',
+        './atoms/Button': './src/components/Button.tsx',
+        './atoms/Label': './src/components/atoms/Label.tsx',
+
+        // Molecules
+        './molecules/FormField': './src/components/molecules/FormField.tsx',
+        './molecules/ThemeToggle': './src/components/molecules/ThemeToggle.tsx',
+
+        // Legacy components (keep for backward compatibility)
         './Button': './src/components/Button.tsx',
         './UserCard': './src/components/UserCard.tsx',
       },
