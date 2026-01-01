@@ -1,3 +1,6 @@
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+
+// Keep the same interface for compatibility with existing code
 export interface ApiClientConfig {
     baseURL: string;
     timeout?: number;
@@ -11,85 +14,89 @@ export interface ApiResponse<T = any> {
 }
 
 export class ApiClient {
-    private baseURL: string;
-    private timeout: number;
-    private headers: Record<string, string>;
+    private axiosInstance: AxiosInstance;
 
     constructor(config: ApiClientConfig) {
-        this.baseURL = config.baseURL;
-        this.timeout = config.timeout || 30000;
-        this.headers = config.headers || {
-            'Content-Type': 'application/json',
+        this.axiosInstance = axios.create({
+            baseURL: config.baseURL,
+            timeout: config.timeout || 30000,
+            headers: {
+                'Content-Type': 'application/json',
+                ...config.headers,
+            },
+        });
+
+        this.setupInterceptors();
+    }
+
+    private setupInterceptors() {
+        this.axiosInstance.interceptors.request.use(
+            (config) => {
+                console.log(`[Request] ${config.method?.toUpperCase()} ${config.url}`);
+                return config;
+            },
+            (error) => {
+                return Promise.reject(error);
+            }
+        );
+
+        // Response Interceptor
+        this.axiosInstance.interceptors.response.use(
+            (response) => {
+                return response;
+            },
+            (error: AxiosError) => {
+                if (error.response) {
+                    console.error('[API Error]', error.response.status, error.response.data);
+
+                    if (error.response.status === 401) {
+                        console.warn('Unauthorized access - potential token expiration');
+                    }
+                } else if (error.request) {
+                    console.error('[API Error] No response received', error.request);
+                } else {
+                    console.error('[API Error] Request setup failed', error.message);
+                }
+
+                return Promise.reject(error);
+            }
+        );
+    }
+
+    private normalizeResponse<T>(response: AxiosResponse<T>): ApiResponse<T> {
+        return {
+            data: response.data,
+            status: response.status,
+            statusText: response.statusText,
         };
     }
 
-    private async request<T>(
-        method: string,
-        endpoint: string,
-        data?: any
-    ): Promise<ApiResponse<T>> {
-        const url = `${this.baseURL}${endpoint}`;
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), this.timeout);
-
-        try {
-            const response = await fetch(url, {
-                method,
-                headers: this.headers,
-                body: data ? JSON.stringify(data) : undefined,
-                signal: controller.signal,
-            });
-
-            clearTimeout(timeoutId);
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const responseData = await response.json();
-
-            return {
-                data: responseData,
-                status: response.status,
-                statusText: response.statusText,
-            };
-        } catch (error) {
-            clearTimeout(timeoutId);
-
-            if (error instanceof Error) {
-                if (error.name === 'AbortError') {
-                    throw new Error('Request timeout');
-                }
-                throw error;
-            }
-            throw new Error('Network request failed');
-        }
+    async get<T>(endpoint: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+        const response = await this.axiosInstance.get<T>(endpoint, config);
+        return this.normalizeResponse(response);
     }
 
-    async get<T>(endpoint: string): Promise<ApiResponse<T>> {
-        return this.request<T>('GET', endpoint);
+    async post<T>(endpoint: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+        const response = await this.axiosInstance.post<T>(endpoint, data, config);
+        return this.normalizeResponse(response);
     }
 
-    async post<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
-        return this.request<T>('POST', endpoint, data);
+    async put<T>(endpoint: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+        const response = await this.axiosInstance.put<T>(endpoint, data, config);
+        return this.normalizeResponse(response);
     }
 
-    async put<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
-        return this.request<T>('PUT', endpoint, data);
-    }
-
-    async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
-        return this.request<T>('DELETE', endpoint);
+    async delete<T>(endpoint: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+        const response = await this.axiosInstance.delete<T>(endpoint, config);
+        return this.normalizeResponse(response);
     }
 
     setAuthToken(token: string) {
-        this.headers['Authorization'] = `Bearer ${token}`;
+        this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
 
     removeAuthToken() {
-        delete this.headers['Authorization'];
+        delete this.axiosInstance.defaults.headers.common['Authorization'];
     }
 }
 
