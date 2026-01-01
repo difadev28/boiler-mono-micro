@@ -1,6 +1,0 @@
-﻿src/core/infrastructure/repositories/MockAuthRepository.ts(86,24): error TS6133: 'refreshToken' is declared but its value is never read.
-src/core/usecases/auth/AuthLoginUseCase.ts(1,65): error TS2307: Cannot find module '../domain/repositories/IAuthRepository' or its corresponding type declarations.
-src/core/usecases/auth/AuthLoginUseCase.ts(2,28): error TS2307: Cannot find module '../domain/entities/User' or its corresponding type declarations.
-undefined
-E:\Difa\2025\Belajar\monorepo\apps\host:
-ΓÇëERR_PNPM_RECURSIVE_EXEC_FIRST_FAILΓÇë Command failed with exit code 2: tsc --noEmit
