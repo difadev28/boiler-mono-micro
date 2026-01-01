@@ -4,8 +4,10 @@ import LoginForm from '../components/organisms/LoginForm';
 import { useAuthStore } from '../stores/authStore';
 import { useThemeStore } from '../stores/themeStore';
 
+import ThemeToggle from '../components/molecules/ThemeToggle';
+
 // @ts-ignore
-const ThemeToggle = React.lazy(() => import('remote_app/molecules/ThemeToggle'));
+// const ThemeToggle = React.lazy(() => import('remote_app/molecules/ThemeToggle'));
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -27,9 +29,7 @@ const LoginPage: React.FC = () => {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-200">
             {/* Theme Toggle - Top Right */}
             <div className="absolute top-6 right-6">
-                <React.Suspense fallback={<div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />}>
-                    <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
-                </React.Suspense>
+                <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
             </div>
 
             {/* Login Card */}

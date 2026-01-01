@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { LoginCredentials } from '../../../core/domain/repositories/IAuthRepository';
 
-// Dynamic imports from remote
-// @ts-ignore
-const Button = React.lazy(() => import('remote_app/atoms/Button'));
-// @ts-ignore
-const FormField = React.lazy(() => import('remote_app/molecules/FormField'));
+import Button from '../atoms/Button';
+import FormField from '../molecules/FormField';
 
 export interface LoginFormProps {
     onSubmit: (credentials: LoginCredentials) => Promise<void>;
@@ -62,47 +59,40 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading, error }) => 
                 </div>
             )}
 
-            <React.Suspense fallback={<div className="h-20 animate-pulse bg-gray-200 dark:bg-gray-700 rounded" />}>
-                <FormField
-                    id="email"
-                    label="Email"
-                    type="email"
-                    value={email}
-                    onChange={setEmail}
-                    error={errors.email}
-                    placeholder="Enter your email"
-                    autoComplete="email"
-                    required
-                    disabled={isLoading}
-                />
-            </React.Suspense>
+            <FormField
+                id="email"
+                label="Email"
+                type="email"
+                value={email}
+                onChange={setEmail}
+                error={errors.email}
+                placeholder="Enter your email"
+                autoComplete="email"
+                required
+                disabled={isLoading}
+            />
 
-            <React.Suspense fallback={<div className="h-20 animate-pulse bg-gray-200 dark:bg-gray-700 rounded" />}>
-                <FormField
-                    id="password"
-                    label="Password"
-                    type="password"
-                    value={password}
-                    onChange={setPassword}
-                    error={errors.password}
-                    placeholder="Enter your password"
-                    autoComplete="current-password"
-                    required
-                    disabled={isLoading}
-                />
-            </React.Suspense>
+            <FormField
+                id="password"
+                label="Password"
+                type="password"
+                value={password}
+                onChange={setPassword}
+                error={errors.password}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                required
+                disabled={isLoading}
+            />
 
-            <React.Suspense fallback={<div className="h-12 animate-pulse bg-gray-200 dark:bg-gray-700 rounded" />}>
-                <Button
-                    type="submit"
-                    label={isLoading ? 'Signing in...' : 'Sign In'}
-                    variant="primary"
-                    size="lg"
-                    disabled={isLoading}
-                    onClick={() => { }}
-                    className="w-full"
-                />
-            </React.Suspense>
+            <Button
+                type="submit"
+                label={isLoading ? 'Signing in...' : 'Sign In'}
+                variant="primary"
+                size="lg"
+                disabled={isLoading}
+                className="w-full"
+            />
 
             {/* Mock credentials hint for development */}
             {import.meta.env.VITE_USE_MOCK === 'true' && (

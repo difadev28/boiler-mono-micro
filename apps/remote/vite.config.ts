@@ -11,18 +11,7 @@ export default defineConfig({
       filename: 'remoteEntry.js',
       // Expose Atomic Design components
       exposes: {
-        // Atoms
-        './atoms/Input': './src/components/atoms/Input.tsx',
-        './atoms/Button': './src/components/Button.tsx',
-        './atoms/Label': './src/components/atoms/Label.tsx',
-
-        // Molecules
-        './molecules/FormField': './src/components/molecules/FormField.tsx',
-        './molecules/ThemeToggle': './src/components/molecules/ThemeToggle.tsx',
-
-        // Legacy components (keep for backward compatibility)
-        './Button': './src/components/Button.tsx',
-        './UserCard': './src/components/UserCard.tsx',
+        './KanbanBoard': './src/features/kanban/KanbanBoard.tsx',
       },
       shared: ['react', 'react-dom'],
     }),

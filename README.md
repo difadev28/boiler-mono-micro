@@ -11,6 +11,7 @@ This boilerplate integrates **Clean Architecture (Uncle Bob)**, **Atomic Design*
 *   **Atomic Design**: Reusable UI components organized into Atoms, Molecules, and Organisms.
 *   **Dependency Injection**: Centralized registry for managing dependencies (e.g., swapping Mock vs Real API).
 *   **Authentication & State**: Robust auth flow with `Zustand` (persisted) and `Axios` interceptors.
+*   **Feature Microfrontends**: Remote app exposes complete features (e.g., Kanban Board) rather than just UI components.
 *   **Theming**: Dark/Light mode support with Tailwind CSS.
 *   **Type Safety**: 100% TypeScript coverage across all layers.
 
@@ -20,6 +21,8 @@ This boilerplate integrates **Clean Architecture (Uncle Bob)**, **Atomic Design*
 
 ## 🏗️ Architecture Overview
 
+![Feature Based Architecture](C:/Users/DIfaa/.gemini/antigravity/brain/7509cfe8-71e1-4449-863a-6ab961f19f14/architecture_feature_based_mockup_1767260977158.png)
+
 ### 🗺️ System Diagram
 
 ```mermaid
@@ -28,15 +31,14 @@ graph TD
         H[Core Logic] -->|Composes| P[Presentation]
         P -->|Routes| L[LoginPage]
         P -->|Routes| D[DashboardPage]
+        P -->|Contains| LocalUI[Local Atoms/Molecules]
     end
 
     subgraph Remote Application [Port 5001]
-        R[UI Library] -->|Exposes| A[Atoms]
-        R -->|Exposes| M[Molecules]
+        F[Feature: KanbanBoard]
     end
 
-    L -->|Consumes| M
-    L -->|Consumes| A
+    D -->|Consumes Feature| F
 ```
 
 ### 🧠 Clean Architecture (Host App)
@@ -71,26 +73,28 @@ graph TD
 ### 1. Host Application (`apps/host`)
 The main container application ("Web App").
 *   **Port**: `3000`
-*   **Role**: Application Logic, Routing, Page Composition.
+*   **Role**: Application Logic, Routing, Page Composition & **Base UI**.
 *   **Layers**:
     *   `core/domain`: Entities (`User`) & Interfaces (`IAuthRepository`).
     *   `core/usecases`: Pure business logic (`AuthLoginUseCase`).
     *   `core/infrastructure`: `ApiClient` (Axios) and Repositories (`RealAuthRepository`).
-    *   `presentation`: Atomic Pages (`LoginPage`) and Organisms (`LoginForm`).
+    *   `presentation`: Atomic Pages (`LoginPage`) and components.
+    *   **Local UI**: Atoms (`Button`, `Input`) and Molecules (`FormField`) are now local to ensure independence.
 
 ### 2. Remote Application (`apps/remote`)
-The UI Component Library ("Remote App").
+The **Feature Provider** ("Remote App").
 *   **Port**: `3001` (Dev) / `5001` (Preview)
-*   **Role**: Exposing reusable Atomic Design components.
+*   **Role**: Exposing complex, self-contained business features.
 *   **Exports**:
-    *   **Atoms**: `Button`, `Input`, `Label`
-    *   **Molecules**: `FormField`, `ThemeToggle`
+    *   **Features**: `KanbanBoard` (Interactable Jira-style board).
+*   *Note: Detailed UI components are now internal to the feature or duplicated if shared.*
 
 ### 3. Shared Technology
 *   **Build Tool**: Vite + SWC
 *   **Styling**: Tailwind CSS
 *   **State**: Zustand
 *   **Networking**: Axios
+*   **Drag & Drop**: `@dnd-kit` (Kanban Feature)
 
 ---
 
