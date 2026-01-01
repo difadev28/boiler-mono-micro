@@ -1,6 +1,8 @@
-# Enterprise Microfrontend Monorepo
+# Boilet Plate Microfrontend Boilerplate
 
-A scalable, production-ready **Microfrontend Architecture** built with **React, Vite, Module Federation**, and **TypeScript**. This project implements **Clean Architecture (Uncle Bob)** and **Atomic Design** principles to ensure maintainability and testability.
+**Objective**: To provide a production-ready, scalable foundation for large-scale React applications using  **Microfrontend Architecture**. 
+
+This boilerplate integrates **Clean Architecture (Uncle Bob)**, **Atomic Design**, and **Module Federation** to solve common enterprise challenges: maintainability, testing, and independent deployment.
 
 ## 🌟 Key Features
 
@@ -14,7 +16,57 @@ A scalable, production-ready **Microfrontend Architecture** built with **React, 
 
 ---
 
+---
+
 ## 🏗️ Architecture Overview
+
+### 🗺️ System Diagram
+
+```mermaid
+graph TD
+    subgraph Host Application [Port 3000]
+        H[Core Logic] -->|Composes| P[Presentation]
+        P -->|Routes| L[LoginPage]
+        P -->|Routes| D[DashboardPage]
+    end
+
+    subgraph Remote Application [Port 5001]
+        R[UI Library] -->|Exposes| A[Atoms]
+        R -->|Exposes| M[Molecules]
+    end
+
+    L -->|Consumes| M
+    L -->|Consumes| A
+```
+
+### 🧠 Clean Architecture (Host App)
+
+The host application follows a strict dependency rule where inner layers know nothing about outer layers.
+
+```mermaid
+graph TD
+    subgraph Infrastructure [Infrastructure Layer]
+        API[ApiClient (Axios)]
+        RepoImpl[RealAuthRepository]
+    end
+
+    subgraph Interface_Adapters [Interface Adapters]
+        RepoInt[IAuthRepository]
+        Store[Zustand Store]
+    end
+
+    subgraph Application_Business_Rules [Use Case Layer]
+        UseCases[AuthLoginUseCase]
+    end
+
+    subgraph Enterprise_Business_Rules [Domain Layer]
+        Entities[User Entity]
+    end
+
+    Infrastructure --> Interface_Adapters
+    Interface_Adapters --> Application_Business_Rules
+    Application_Business_Rules --> Enterprise_Business_Rules
+```
 
 ### 1. Host Application (`apps/host`)
 The main container application ("Web App").
