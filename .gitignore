@@ -96,3 +96,4 @@ temp/
 .turbo
 *storybook.log
 storybook-static
+.claude
